@@ -33,7 +33,7 @@
   "sideEffects": false,
   "publishConfig": {
     "access": "public",
-    "directory": "dist"
+    "directories": { "src": "dist" }
   },
   "scripts": {
     "build": "tsdown",
@@ -49,12 +49,12 @@
   "dependencies": {
     "cac": "^7.0.0",
     "picocolors": "^1.1.1",
-    "phial": "file:../phial"
+    "phial": "latest"
   },
   "devDependencies": {
     "@types/node": "^25.5.0",
     "bumpp": "^11.0.1",
-    "prepare-publish": "latest",
+    "prepare-publish": "^0.1.0",
     "tsdown": "^0.21.3",
     "typescript": "^5.9.3",
     "vitest": "^4.1.0"
