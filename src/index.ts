@@ -1,5 +1,6 @@
 import { spawn } from "node:child_process";
 import { mkdir, readdir, readFile, stat, writeFile } from "node:fs/promises";
+import { createRequire } from "node:module";
 import { basename, dirname, join, relative, resolve } from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
@@ -43,7 +44,7 @@ export async function createPhialApp(options: CreatePhialAppOptions = {}): Promi
   });
 
   const packageName = toPackageName(basename(targetDir));
-  const phialVersion = await readOwnVersion();
+  const phialVersion = await readInstalledPhialVersion();
   const variables = {
     packageManager,
     packageName,
@@ -347,8 +348,14 @@ async function installProjectDependencies(targetDir: string, packageManager: str
   });
 }
 
-async function readOwnVersion() {
-  const packageJsonPath = resolve(PACKAGE_ROOT, "../package.json");
+async function readInstalledPhialVersion() {
+  const require = createRequire(import.meta.url);
+  const packageJsonPath = require.resolve("phial/package.json");
   const packageJson = JSON.parse(await readFile(packageJsonPath, "utf8"));
-  return packageJson.version ?? "0.0.1";
+
+  if (typeof packageJson.version !== "string" || packageJson.version.length === 0) {
+    throw new Error(`Installed phial package is missing a version: ${packageJsonPath}`);
+  }
+
+  return packageJson.version;
 }
