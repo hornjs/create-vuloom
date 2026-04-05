@@ -1,0 +1,62 @@
+{
+  "name": "create-phial",
+  "version": "0.0.0",
+  "description": "Scaffold a new Phial application.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Maofeng <hornjs@qq.com>",
+  "keywords": [
+    "phial",
+    "scaffold",
+    "ssr",
+    "vue"
+  ],
+  "homepage": "https://github.com/author/library#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/author/library.git"
+  },
+  "bin": {
+    "create-phial": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "templates",
+    "LICENSE",
+    "README.md",
+    "package.json"
+  ],
+  "exports": {
+    ".": "./dist/index.js",
+    "./package.json": "./package.json"
+  },
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public",
+    "directory": "dist"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "test": "vitest",
+    "typecheck": "tsc --noEmit",
+    "check": "pnpm test && pnpm typecheck",
+    "prepare:publish": "prepare-publish --print-tree",
+    "prepare:publish:dry-run": "prepare-publish --dry-run",
+    "release": "bumpp",
+    "prepublishOnly": "pnpm run build && pnpm run prepare:publish"
+  },
+  "dependencies": {
+    "cac": "^7.0.0",
+    "picocolors": "^1.1.1",
+    "phial": "file:../phial"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "bumpp": "^11.0.1",
+    "prepare-publish": "latest",
+    "tsdown": "^0.21.3",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.0"
+  }
+}
