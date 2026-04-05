@@ -10,9 +10,8 @@
     "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
-    "@hornjs/fest": "^0.0.4",
     "phial": "{{phialVersion}}",
-    "h3": "^1.15.0",
+    "sevok": "latest",
     "vue": "^3.5.30",
     "vue-router": "^4.6.4"
   },

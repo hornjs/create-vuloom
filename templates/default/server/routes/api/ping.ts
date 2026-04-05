@@ -1,4 +1,4 @@
-import type { ServerRequest } from "@hornjs/fest";
+import type { InvocationContext } from "phial/server";
 import { serverTraceKey } from "../../context";
 
 export default {
@@ -6,26 +6,26 @@ export default {
   meta: {
     kind: "api",
   },
-  GET(request: ServerRequest) {
-    const { searchParams } = new URL(request.url);
-    const trace = request.context.get(serverTraceKey);
+  GET(ctx: InvocationContext) {
+    const { searchParams } = new URL(ctx.request.url);
+    const trace = ctx.get(serverTraceKey);
 
-    return {
+    return Response.json({
       ok: true,
       method: "GET",
       query: searchParams.get("message") ?? null,
       trace,
-    };
+    });
   },
-  async POST(request: ServerRequest) {
-    const trace = request.context.get(serverTraceKey);
-    const body = await request.text();
+  async POST(ctx: InvocationContext) {
+    const trace = ctx.get(serverTraceKey);
+    const body = await ctx.request.text();
 
-    return {
+    return Response.json({
       ok: true,
       method: "POST",
       body: body || null,
       trace,
-    };
+    });
   },
 };

@@ -1,13 +1,13 @@
-import type { ServerMiddleware } from "@hornjs/fest";
+import type { ServerMiddleware } from "phial/server";
 import { serverTraceKey } from "../context";
 
-const serverTraceRoute: ServerMiddleware = async (request, next) => {
-  const url = new URL(request.url);
-  const trace = request.context.get(serverTraceKey);
-  const nextTrace = [...trace, `route:${url.pathname}:${request.method}`];
+const serverTraceRoute: ServerMiddleware = async (ctx, next) => {
+  const url = new URL(ctx.request.url);
+  const trace = ctx.get(serverTraceKey);
+  const nextTrace = [...trace, `route:${url.pathname}:${ctx.request.method}`];
 
-  request.context.set(serverTraceKey, nextTrace);
-  return next(request);
+  ctx.set(serverTraceKey, nextTrace);
+  return next(ctx);
 };
 
 export default serverTraceRoute;

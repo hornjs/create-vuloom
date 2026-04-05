@@ -45,4 +45,53 @@ describe("createPhialApp", () => {
 
     expect(packageJson.dependencies?.phial).toBe(`^${installedPhialVersion}`);
   });
+
+  test("scaffolds server templates against the current phial/server surface", async () => {
+    const cwd = await mkdtemp(join(tmpdir(), "create-phial-test-"));
+    tempDirs.push(cwd);
+
+    await createPhialApp({
+      cwd,
+      target: "my-app",
+    });
+
+    const appRoot = join(cwd, "my-app");
+    const packageJson = JSON.parse(await readFile(join(appRoot, "package.json"), "utf8")) as {
+      dependencies?: Record<string, string>;
+    };
+    const contextSource = await readFile(join(appRoot, "server", "context.ts"), "utf8");
+    const traceSource = await readFile(
+      join(appRoot, "server", "middleware", "server-trace.ts"),
+      "utf8",
+    );
+    const routeTraceSource = await readFile(
+      join(appRoot, "server", "middleware", "server-trace-route.ts"),
+      "utf8",
+    );
+    const pingSource = await readFile(join(appRoot, "server", "routes", "api", "ping.ts"), "utf8");
+
+    expect(packageJson.dependencies).toHaveProperty("phial");
+    expect(packageJson.dependencies).toHaveProperty("sevok");
+    expect(packageJson.dependencies).toHaveProperty("vue");
+    expect(packageJson.dependencies).toHaveProperty("vue-router");
+
+    expect(contextSource).toContain('from "phial/server"');
+    expect(contextSource).toContain("createContextKey");
+
+    expect(traceSource).toContain('from "phial/server"');
+    expect(traceSource).toContain("ctx.request");
+    expect(traceSource).toContain("ctx.get(serverTraceKey)");
+    expect(traceSource).toContain("return next(ctx)");
+
+    expect(routeTraceSource).toContain('from "phial/server"');
+    expect(routeTraceSource).toContain("ctx.request");
+    expect(routeTraceSource).toContain("ctx.get(serverTraceKey)");
+    expect(routeTraceSource).toContain("return next(ctx)");
+
+    expect(pingSource).toContain('from "phial/server"');
+    expect(pingSource).toContain("GET(ctx: InvocationContext)");
+    expect(pingSource).toContain("ctx.request.url");
+    expect(pingSource).toContain("ctx.get(serverTraceKey)");
+    expect(pingSource).toContain("return Response.json(");
+  });
 });
