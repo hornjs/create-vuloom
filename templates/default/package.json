@@ -1,0 +1,25 @@
+{
+  "name": "{{packageName}}",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "phial dev",
+    "build": "phial build",
+    "prepare": "phial prepare",
+    "start": "phial start",
+    "typecheck": "vue-tsc --noEmit"
+  },
+  "dependencies": {
+    "@hornjs/fest": "^0.0.4",
+    "phial": "{{phialVersion}}",
+    "h3": "^1.15.0",
+    "vue": "^3.5.30",
+    "vue-router": "^4.6.4"
+  },
+  "devDependencies": {
+    "@types/node": "^24.11.0",
+    "typescript": "~5.9.3",
+    "vite": "^8.0.0",
+    "vue-tsc": "^3.2.5"
+  }
+}
