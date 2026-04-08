@@ -1,4 +1,4 @@
-import { defineConfig } from "phial/vite-plugin";
+import { defineConfig } from "phial/vite";
 
 export default defineConfig({
   server: {

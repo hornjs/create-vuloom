@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { RouterLink, useAppData, useRoute } from "phial";
+import { RouterLink, useAppData, useRoute } from "phial/app";
 
 const route = useRoute();
 const appData = useAppData<{ theme: "light" | "sepia" }>();

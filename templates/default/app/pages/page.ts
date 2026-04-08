@@ -5,7 +5,7 @@ import {
   useNavigation,
   useRouteLoaderData,
   useSubmit,
-} from "phial";
+} from "phial/app";
 
 interface LayoutLoaderData {
   fromAppMiddleware: boolean;

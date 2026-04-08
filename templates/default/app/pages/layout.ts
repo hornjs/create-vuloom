@@ -1,5 +1,5 @@
 import { computed, defineComponent, h } from "vue";
-import { RouterLink, useAppData } from "phial";
+import { RouterLink, useAppData } from "phial/app";
 
 interface AppData {
   theme: "light" | "sepia";

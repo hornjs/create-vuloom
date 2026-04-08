@@ -1,5 +1,5 @@
 import { defineComponent, h } from "vue";
-import { useLoaderData, useRoute } from "phial";
+import { useLoaderData, useRoute } from "phial/app";
 
 interface RouteData {
   middlewareTrace: string;
