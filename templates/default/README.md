@@ -13,8 +13,12 @@ The template also supports:
 
 - `app/loader.ts` for app-shell data exposed through `useAppData()`
 - `app/middleware/*.ts` for named reusable middleware
-- `app/pages/loading.*` for route loading boundaries
-- `app/pages/**/_middleware.ts` for directory-scoped route middleware
+- `app/pages/index/page.ts` for the root route component
+- `app/pages/index/loader.ts` for the root route loader
+- `app/pages/index/loading.ts` for the root route loading boundary
+- `app/pages/index/action.ts` for the root route action
+- `app/pages/**/middleware.ts` for directory-scoped route middleware
+- `app/pages/blog/middleware.ts` for the blog subtree middleware
 - `server/routes/**/*.ts` for raw HTTP handlers exported as plain objects
 - `server/middleware/*.ts` for named reusable server middleware
 - `server/routes/**/_middleware.ts` for directory-scoped server middleware

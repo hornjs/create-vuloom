@@ -94,4 +94,73 @@ describe("createPhialApp", () => {
     expect(pingSource).toContain("ctx.get(serverTraceKey)");
     expect(pingSource).toContain("return Response.json(");
   });
+
+  test("scaffolds app route templates against the current phial/app route conventions", async () => {
+    const cwd = await mkdtemp(join(tmpdir(), "create-phial-test-"));
+    tempDirs.push(cwd);
+
+    await createPhialApp({
+      cwd,
+      target: "my-app",
+    });
+
+    const appRoot = join(cwd, "my-app");
+    const readmeSource = await readFile(join(appRoot, "README.md"), "utf8");
+    const rootPageSource = await readFile(join(appRoot, "app", "pages", "index", "page.ts"), "utf8");
+    const rootLoaderSource = await readFile(
+      join(appRoot, "app", "pages", "index", "loader.ts"),
+      "utf8",
+    );
+    const rootActionSource = await readFile(
+      join(appRoot, "app", "pages", "index", "action.ts"),
+      "utf8",
+    );
+    const rootLoadingSource = await readFile(
+      join(appRoot, "app", "pages", "index", "loading.ts"),
+      "utf8",
+    );
+    const blogMiddlewareSource = await readFile(
+      join(appRoot, "app", "pages", "blog", "middleware.ts"),
+      "utf8",
+    );
+
+    await expect(readFile(join(appRoot, "app", "pages", "page.ts"), "utf8")).rejects.toMatchObject({
+      code: "ENOENT",
+    });
+    await expect(
+      readFile(join(appRoot, "app", "pages", "loader.ts"), "utf8"),
+    ).rejects.toMatchObject({
+      code: "ENOENT",
+    });
+    await expect(
+      readFile(join(appRoot, "app", "pages", "action.ts"), "utf8"),
+    ).rejects.toMatchObject({
+      code: "ENOENT",
+    });
+    await expect(
+      readFile(join(appRoot, "app", "pages", "loading.ts"), "utf8"),
+    ).rejects.toMatchObject({
+      code: "ENOENT",
+    });
+    await expect(
+      readFile(join(appRoot, "app", "pages", "blog", "_middleware.ts"), "utf8"),
+    ).rejects.toMatchObject({
+      code: "ENOENT",
+    });
+
+    expect(rootPageSource).toContain('from "phial/app"');
+    expect(rootLoaderSource).toContain("Hello from the root page loader.");
+    expect(rootActionSource).toContain("Saved a greeting");
+    expect(rootLoadingSource).toContain("route:");
+    expect(rootLoadingSource).not.toContain("routeId:");
+    expect(blogMiddlewareSource).toContain('export default ["blog-trace"]');
+
+    expect(readmeSource).toContain("`app/pages/index/page.ts`");
+    expect(readmeSource).toContain("`app/pages/index/loader.ts`");
+    expect(readmeSource).toContain("`app/pages/index/loading.ts`");
+    expect(readmeSource).toContain("`app/pages/index/action.ts`");
+    expect(readmeSource).toContain("`app/pages/blog/middleware.ts`");
+    expect(readmeSource).not.toContain("`app/pages/page.ts`");
+    expect(readmeSource).not.toContain("`app/pages/blog/_middleware.ts`");
+  });
 });

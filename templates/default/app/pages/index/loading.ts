@@ -1,37 +1,20 @@
 import { computed, defineComponent, h } from "vue";
+import type { PageRouteRecord } from "phial/app";
 
 type RouteLoadingProps = {
-  routeId: string;
-  location: string;
-  previousLocation?: string;
-  action: string;
+  route: PageRouteRecord;
 };
 
 export default defineComponent({
   name: "ExampleRootLoading",
   props: {
-    routeId: {
-      type: String,
-      required: true,
-    },
-    location: {
-      type: String,
-      required: true,
-    },
-    previousLocation: {
-      type: String,
-      default: "",
-    },
-    action: {
-      type: String,
+    route: {
+      type: Object,
       required: true,
     },
   },
   setup(props: RouteLoadingProps) {
-    const description = computed(() => {
-      const previous = props.previousLocation ? ` from ${props.previousLocation}` : "";
-      return `Navigating to ${props.location}${previous} (${props.action})`;
-    });
+    const description = computed(() => `Navigating to ${props.route.path ?? "/"}`);
 
     return () =>
       h(
