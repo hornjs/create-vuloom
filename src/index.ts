@@ -13,7 +13,7 @@ const TEMPLATE_ALIASES = new Map([
   ["zero-config", "default"],
 ]);
 
-export interface CreatePhialAppOptions {
+export interface CreateVuloomAppOptions {
   cwd?: string;
   target?: string;
   template?: string;
@@ -22,15 +22,15 @@ export interface CreatePhialAppOptions {
   force?: boolean;
 }
 
-export interface CreatePhialAppResult {
+export interface CreateVuloomAppResult {
   targetDir: string;
   packageManager: string;
   install: boolean;
 }
 
-export async function createPhialApp(options: CreatePhialAppOptions = {}): Promise<CreatePhialAppResult> {
+export async function createVuloomApp(options: CreateVuloomAppOptions = {}): Promise<CreateVuloomAppResult> {
   const cwd = resolve(options.cwd ?? process.cwd());
-  const targetArg = options.target ?? "phial-app";
+  const targetArg = options.target ?? "vuloom-app";
   const targetDir = resolve(cwd, targetArg);
   const template = resolveTemplateName(options.template);
   const templateDir = resolve(TEMPLATE_ROOT, template);
@@ -44,12 +44,12 @@ export async function createPhialApp(options: CreatePhialAppOptions = {}): Promi
   });
 
   const packageName = toPackageName(basename(targetDir));
-  const phialVersion = await readInstalledPhialVersion();
+  const vuloomVersion = await readInstalledVuloomVersion();
   const variables = {
     packageManager,
     packageName,
     projectName: basename(targetDir),
-    phialVersion: `^${phialVersion}`,
+    vuloomVersion: `^${vuloomVersion}`,
     buildCommand: formatRunCommand(packageManager, "build"),
     devCommand: formatRunCommand(packageManager, "dev"),
     startCommand: formatRunCommand(packageManager, "start"),
@@ -153,7 +153,7 @@ export function parseArgs(argv: string[]): ParsedArgs {
 export function printHelp() {
   console.log(
     [
-      "Usage: create-phial <project-dir> [options]",
+      "Usage: create-vuloom <project-dir> [options]",
       "",
       "Options:",
       "  --template <name>         Scaffold template name. Supported: default, zero-config",
@@ -165,10 +165,10 @@ export function printHelp() {
   );
 }
 
-export function printNextSteps(result: CreatePhialAppResult, cwd: string = process.cwd()) {
+export function printNextSteps(result: CreateVuloomAppResult, cwd: string = process.cwd()) {
   const relativeTarget = relative(cwd, result.targetDir) || ".";
   const packageManager = result.packageManager;
-  const lines = ["", `Scaffolded Phial app in ${result.targetDir}`, "", "Next steps:"];
+  const lines = ["", `Scaffolded Vuloom app in ${result.targetDir}`, "", "Next steps:"];
 
   if (relativeTarget !== ".") {
     lines.push(`  cd ${relativeTarget}`);
@@ -321,7 +321,7 @@ function toPackageName(projectName: string) {
     .replace(/^[._-]+/, "")
     .replace(/[._-]+$/, "");
 
-  return normalized || "phial-app";
+  return normalized || "vuloom-app";
 }
 
 async function installProjectDependencies(targetDir: string, packageManager: string) {
@@ -348,13 +348,13 @@ async function installProjectDependencies(targetDir: string, packageManager: str
   });
 }
 
-async function readInstalledPhialVersion() {
+async function readInstalledVuloomVersion() {
   const require = createRequire(import.meta.url);
-  const packageJsonPath = require.resolve("phial/package.json");
+  const packageJsonPath = require.resolve("vuloom/package.json");
   const packageJson = JSON.parse(await readFile(packageJsonPath, "utf8"));
 
   if (typeof packageJson.version !== "string" || packageJson.version.length === 0) {
-    throw new Error(`Installed phial package is missing a version: ${packageJsonPath}`);
+    throw new Error(`Installed vuloom package is missing a version: ${packageJsonPath}`);
   }
 
   return packageJson.version;
