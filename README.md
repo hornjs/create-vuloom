@@ -1,13 +1,13 @@
-# create-phial
+# create-vuloom
 
-Scaffold a new [Phial](https://github.com/hornjs/phial) application.
+Scaffold a new [Vuloom](https://github.com/hornjs/vuloom) application.
 
 ## Usage
 
 With `pnpm`:
 
 ```bash
-pnpm create phial my-app
+pnpm create vuloom my-app
 cd my-app
 pnpm install
 pnpm dev
@@ -16,7 +16,7 @@ pnpm dev
 With `npm`:
 
 ```bash
-npm create phial@latest my-app
+npm create vuloom@latest my-app
 cd my-app
 npm install
 npm run dev
@@ -25,7 +25,7 @@ npm run dev
 With `yarn`:
 
 ```bash
-yarn create phial my-app
+yarn create vuloom my-app
 cd my-app
 yarn install
 yarn dev
@@ -34,7 +34,7 @@ yarn dev
 ## Options
 
 ```
-Usage: create-phial <project-dir> [options]
+Usage: create-vuloom <project-dir> [options]
 
 Options:
   --template <name>         Scaffold template name. Supported: default, zero-config
