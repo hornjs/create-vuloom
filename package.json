@@ -1,12 +1,12 @@
 {
-  "name": "create-phial",
+  "name": "create-vuloom",
   "version": "0.0.4",
-  "description": "Scaffold a new Phial application.",
+  "description": "Scaffold a new Vuloom application.",
   "type": "module",
   "license": "MIT",
   "author": "Maofeng <hornjs@qq.com>",
   "keywords": [
-    "phial",
+    "vuloom",
     "scaffold",
     "ssr",
     "vue"
@@ -17,7 +17,7 @@
     "url": "git+https://github.com/author/library.git"
   },
   "bin": {
-    "create-phial": "./dist/index.js"
+    "create-vuloom": "./dist/index.js"
   },
   "files": [
     "dist",
@@ -49,7 +49,7 @@
   "dependencies": {
     "cac": "^7.0.0",
     "picocolors": "^1.1.1",
-    "phial": "latest"
+    "vuloom": "latest"
   },
   "devDependencies": {
     "@types/node": "^25.5.0",
