@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { useAppData } from "phial/app";
+import { useAppData } from "vuloom/app";
 
 interface AppData {
   theme: "light" | "sepia";

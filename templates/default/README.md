@@ -1,6 +1,6 @@
 # {{projectName}}
 
-A Phial application scaffolded by `create-phial`.
+A Vuloom application scaffolded by `create-vuloom`.
 
 ## Included examples
 
@@ -22,8 +22,8 @@ The template also supports:
 - `server/routes/**/*.ts` for raw HTTP handlers exported as plain objects
 - `server/middleware/*.ts` for named reusable server middleware
 - `server/routes/**/_middleware.ts` for directory-scoped server middleware
-- `phial.config.ts -> server.middleware` for global server middleware
-- `phial prepare` for generating `.phial/types/`
+- `vuloom.config.ts -> server.middleware` for global server middleware
+- `vuloom prepare` for generating `.vuloom/types/`
 
 ## Development
 
@@ -32,9 +32,9 @@ The template also supports:
 {{devCommand}}
 ```
 
-The scaffold also defines `pnpm prepare`, which runs `phial prepare` and refreshes `.phial/types/` so app/server middleware completion and generated app-route types stay current.
+The scaffold also defines `pnpm prepare`, which runs `vuloom prepare` and refreshes `.vuloom/types/` so app/server middleware completion and generated app-route types stay current.
 
-Server routes are path-owned: if a `server/routes` pattern overlaps with an `app/pages` pattern, Phial throws during scanning instead of splitting ownership by method.
+Server routes are path-owned: if a `server/routes` pattern overlaps with an `app/pages` pattern, Vuloom throws during scanning instead of splitting ownership by method.
 
 ## Build
 
@@ -43,12 +43,12 @@ Server routes are path-owned: if a `server/routes` pattern overlaps with an `app
 {{buildCommand}}
 ```
 
-By default Phial writes the production build to:
+By default Vuloom writes the production build to:
 
 - `.output/public/` for client assets
 - `.output/server/index.js` for the server bundle
 
-If you explicitly set `vite.build.outDir`, Phial will use that directory for the client build.
+If you explicitly set `vite.build.outDir`, Vuloom will use that directory for the client build.
 
 ## Start
 

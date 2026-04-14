@@ -1,4 +1,4 @@
-import type { ServerMiddleware } from "phial/server";
+import type { ServerMiddleware } from "vuloom/server";
 import { serverTraceKey } from "../context";
 
 const serverTraceRoute: ServerMiddleware = async (ctx, next) => {

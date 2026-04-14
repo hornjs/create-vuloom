@@ -1,5 +1,5 @@
 import { computed, defineComponent, h } from "vue";
-import type { PageRouteRecord } from "phial/app";
+import type { PageRouteRecord } from "vuloom/app";
 
 type RouteLoadingProps = {
   route: PageRouteRecord;

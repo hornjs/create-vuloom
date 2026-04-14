@@ -1,4 +1,4 @@
-import type { InvocationContext } from "phial/server";
+import type { InvocationContext } from "vuloom/server";
 import { serverTraceKey } from "../../context";
 
 export default {

@@ -19,8 +19,8 @@
     "app/**/*.tsx",
     "app/**/*.vue",
     "server/**/*.ts",
-    ".phial/types/**/*.d.ts",
-    "phial.config.ts"
+    ".vuloom/types/**/*.d.ts",
+    "vuloom.config.ts"
   ],
   "exclude": ["node_modules", ".output", "dist"]
 }

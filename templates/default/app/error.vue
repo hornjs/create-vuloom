@@ -11,7 +11,7 @@ defineProps<{
 
 <template>
   <main
-    data-phial-error=""
+    data-vuloom-error=""
     style="
       margin: 0 auto;
       max-width: 720px;

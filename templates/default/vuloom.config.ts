@@ -1,4 +1,4 @@
-import { defineConfig } from "phial/vite";
+import { defineConfig } from "vuloom/vite";
 
 export default defineConfig({
   server: {
