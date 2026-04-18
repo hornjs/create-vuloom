@@ -11,13 +11,13 @@
     "ssr",
     "vue"
   ],
-  "homepage": "https://github.com/author/library#readme",
+  "homepage": "https://github.com/hornjs/create-vuloom#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/author/library.git"
+    "url": "git+https://github.com/hornjs/create-vuloom.git"
   },
   "bin": {
-    "create-vuloom": "./dist/index.js"
+    "create-vuloom": "./src/index.ts"
   },
   "files": [
     "dist",
@@ -27,7 +27,7 @@
     "package.json"
   ],
   "exports": {
-    ".": "./dist/index.js",
+    ".": "./src/index.ts",
     "./package.json": "./package.json"
   },
   "sideEffects": false,
@@ -54,7 +54,7 @@
   "devDependencies": {
     "@types/node": "^25.5.0",
     "bumpp": "^11.0.1",
-    "prepare-publish": "^0.1.0",
+    "prepare-publish": "^0.1.1",
     "tsdown": "^0.21.3",
     "typescript": "^5.9.3",
     "vitest": "^4.1.0"
