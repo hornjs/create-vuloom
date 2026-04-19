@@ -10,15 +10,15 @@
     "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
-    "vuloom": "{{vuloomVersion}}",
+    "vuloom": "latest",
     "sevok": "latest",
-    "vue": "^3.5.30",
-    "vue-router": "^4.6.4"
+    "vue": "latest",
+    "vue-router": "latest"
   },
   "devDependencies": {
-    "@types/node": "^24.11.0",
-    "typescript": "~5.9.3",
-    "vite": "^8.0.0",
-    "vue-tsc": "^3.2.5"
+    "@types/node": "latest",
+    "typescript": "latest",
+    "vite": "latest",
+    "vue-tsc": "latest"
   }
 }
