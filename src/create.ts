@@ -3,9 +3,10 @@ import {
   readdir,
   readFile,
   stat,
+  writeFile,
 } from "node:fs/promises";
 import { createRequire } from "node:module";
-import { basename, dirname, resolve } from "node:path";
+import { basename, dirname, join, resolve } from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
 import {
@@ -51,20 +52,10 @@ export async function createVuloomApp(options: CreateVuloomAppOptions = {}): Pro
   await ensureTemplateExists(templateDir);
   await ensureTargetDirectory(targetDir, { force });
 
-  const packageName = toPackageName(basename(targetDir));
-  const vuloomVersion = await readInstalledVuloomVersion();
-  const variables = {
-    packageManager,
-    packageName,
-    projectName: basename(targetDir),
-    vuloomVersion: `^${vuloomVersion}`,
-    buildCommand: formatRunCommand(packageManager, "build"),
-    devCommand: formatRunCommand(packageManager, "dev"),
-    startCommand: formatRunCommand(packageManager, "start"),
-    installCommand: formatInstallCommand(packageManager),
-  };
+  const variables = resolveTemplateVariables(targetDir, packageManager);
 
   await copyTemplateDirectory(templateDir, targetDir, variables);
+  await resolveLatestDependencies(join(targetDir, "package.json"));
 
   if (install) {
     await installProjectDependencies(targetDir, packageManager);
@@ -75,6 +66,73 @@ export async function createVuloomApp(options: CreateVuloomAppOptions = {}): Pro
     packageManager,
     install,
   };
+}
+
+export function resolveTemplateVariables(targetDir: string, packageManager: string) {
+  return {
+    packageManager,
+    packageName: toPackageName(basename(targetDir)),
+    projectName: basename(targetDir),
+    buildCommand: formatRunCommand(packageManager, "build"),
+    devCommand: formatRunCommand(packageManager, "dev"),
+    startCommand: formatRunCommand(packageManager, "start"),
+    installCommand: formatInstallCommand(packageManager),
+  };
+}
+
+export async function resolveLatestDependencies(packageJsonPath: string) {
+  const pkg = JSON.parse(await readFile(packageJsonPath, "utf8"));
+
+  const entries = Object.entries(pkg["dependencies"] ?? {})
+    .filter(([, version]) => version === "latest")
+    .map(([name]) => name);
+
+  await Promise.all(
+    entries.map(async (name) => {
+      const version = await resolveInstalledPackageVersion(name);
+      if (version !== null) {
+        pkg["dependencies"][name] = `^${version}`;
+      }
+    }),
+  );
+
+  await writeFile(packageJsonPath, JSON.stringify(pkg, null, 2) + "\n");
+}
+
+async function resolveInstalledPackageVersion(name: string): Promise<string | null> {
+  // 1. Prefer vuloom's context — ensures version compatibility with the framework
+  //    Skip if name is vuloom itself to avoid resolving vuloom/vuloom
+  if (name !== "vuloom") {
+    try {
+      return await readInstalledPackageVersion("vuloom", name);
+    } catch { }
+  }
+
+  // 2. Fall back to create-vuloom's own context (e.g. vuloom itself)
+  try {
+    return await readInstalledPackageVersion(name);
+  } catch {}
+
+  // 3. Last resort: ask the npm registry for the published latest version
+  try {
+    return await fetchLatestPublishedVersion(name);
+  } catch {}
+
+  return null;
+}
+
+async function fetchLatestPublishedVersion(name: string): Promise<string> {
+  const { execFile } = await import("node:child_process");
+  const { promisify } = await import("node:util");
+  const execFileAsync = promisify(execFile);
+  const { stdout } = await execFileAsync("npm", ["view", name, "version"]);
+  const version = stdout.trim();
+
+  if (!version) {
+    throw new Error(`npm view returned no version for ${name}`);
+  }
+
+  return version;
 }
 
 interface EnsureTargetDirectoryOptions {
@@ -112,14 +170,20 @@ export function toPackageName(projectName: string) {
   return normalized || "vuloom-app";
 }
 
-export async function readInstalledVuloomVersion() {
-  const require = createRequire(import.meta.url);
-  const packageJsonPath = require.resolve("vuloom/package.json");
+export async function readInstalledPackageVersion(...chain: [string, ...string[]]) {
+  let resolveFrom = import.meta.url;
+
+  for (const packageName of chain.slice(0, -1)) {
+    resolveFrom = createRequire(resolveFrom).resolve(`${packageName}/package.json`);
+  }
+
+  const packageName = chain[chain.length - 1];
+  const packageJsonPath = createRequire(resolveFrom).resolve(`${packageName}/package.json`);
   const packageJson = JSON.parse(await readFile(packageJsonPath, "utf8"));
 
   if (typeof packageJson.version !== "string" || packageJson.version.length === 0) {
-    throw new Error(`Installed vuloom package is missing a version: ${packageJsonPath}`);
+    throw new Error(`Installed ${packageName} package is missing a version: ${packageJsonPath}`);
   }
 
-  return packageJson.version;
+  return packageJson.version as string;
 }

@@ -6,7 +6,7 @@ import {
   createVuloomApp,
   ensureTargetDirectory,
   toPackageName,
-  readInstalledVuloomVersion,
+  readInstalledPackageVersion,
 } from "../src/create.ts";
 
 const tempDirs: string[] = [];
@@ -33,9 +33,14 @@ describe("toPackageName", () => {
   });
 });
 
-describe("readInstalledVuloomVersion", () => {
-  test("returns a valid semver string", async () => {
-    const version = await readInstalledVuloomVersion();
+describe("readInstalledPackageVersion", () => {
+  test("returns a valid semver string for a direct dependency", async () => {
+    const version = await readInstalledPackageVersion("vuloom");
+    expect(version).toMatch(/^\d+\.\d+\.\d+/);
+  });
+
+  test("resolves a transitive dependency via chain", async () => {
+    const version = await readInstalledPackageVersion("vuloom", "sevok");
     expect(version).toMatch(/^\d+\.\d+\.\d+/);
   });
 });
@@ -84,7 +89,7 @@ describe("createVuloomApp", () => {
     const cwd = await mkdtemp(join(tmpdir(), "create-vuloom-test-"));
     tempDirs.push(cwd);
 
-    const installedVuloomVersion = await readInstalledVuloomVersion();
+    const installedVuloomVersion = await readInstalledPackageVersion("vuloom");
 
     await createVuloomApp({ cwd, target: "my-app" });
 
@@ -93,6 +98,21 @@ describe("createVuloomApp", () => {
     ) as { dependencies?: Record<string, string> };
 
     expect(packageJson.dependencies?.vuloom).toBe(`^${installedVuloomVersion}`);
+  });
+
+  test("scaffolds the installed sevok version into the template package.json", async () => {
+    const cwd = await mkdtemp(join(tmpdir(), "create-vuloom-test-"));
+    tempDirs.push(cwd);
+
+    const installedSevokVersion = await readInstalledPackageVersion("vuloom", "sevok");
+
+    await createVuloomApp({ cwd, target: "my-app" });
+
+    const packageJson = JSON.parse(
+      await readFile(join(cwd, "my-app", "package.json"), "utf8"),
+    ) as { dependencies?: Record<string, string> };
+
+    expect(packageJson.dependencies?.sevok).toBe(`^${installedSevokVersion}`);
   });
 
   test("scaffolds server templates against the current vuloom/server surface", async () => {
